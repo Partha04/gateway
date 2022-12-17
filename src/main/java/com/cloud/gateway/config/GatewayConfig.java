@@ -12,13 +12,19 @@ import org.springframework.context.annotation.Configuration;
 public class GatewayConfig {
     @Value("${userservice.url}")
     private String userserviceurl;
+    @Value("${productservice.url}")
+    private String productserviceurl;
+
     @Autowired
     private GateWayFilter gateWayFilter;
+
+
 
     @Bean
     public RouteLocator routes(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("user", r -> r.path("/user/**").filters(f -> f.filter(gateWayFilter)).uri(userserviceurl))
+                .route("product", r -> r.path("/product/**").filters(f -> f.filter(gateWayFilter)).uri(productserviceurl))
                 .build();
     }
 

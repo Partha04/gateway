@@ -1,6 +1,9 @@
 package com.cloud.gateway.util;
 
+import com.cloud.gateway.config.GatewayConfig;
 import io.jsonwebtoken.Claims;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -18,12 +21,14 @@ import java.util.function.Predicate;
 public class GateWayFilter implements GatewayFilter {
     @Autowired
     private JWTService jwtService;
+    Logger logger = LoggerFactory.getLogger(GateWayFilter.class);
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
+        logger.info(request.getId()+" Method"+request.getMethod()+" Header-"+request.getHeaders()+" URI-" +request.getURI());
 
-        final List<String> apiEndpoints = List.of("/signin", "/signup","/swagger-ui","/swagger","/api-docs");
+        final List<String> apiEndpoints = List.of("/signin", "/signup", "/swagger-ui", "/swagger", "/api-docs", "/actuator");
 
         Predicate<ServerHttpRequest> isApiSecured = r -> apiEndpoints.stream()
                 .noneMatch(uri -> r.getURI().getPath().contains(uri));

@@ -1,6 +1,7 @@
 FROM maven:3.8.6-openjdk-18 as maven
 WORKDIR /app
 COPY ./pom.xml ./pom.xml
+VOLUME /root/.m2
 RUN mvn dependency:go-offline -B
 COPY ./src ./src
 RUN mvn package -DskipTests && cp ./target/gateway-0.0.1-SNAPSHOT.jar app.jar
